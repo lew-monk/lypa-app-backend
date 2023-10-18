@@ -1,5 +1,7 @@
+import { injectable } from "inversify";
 import { User } from "../schema";
 
+@injectable()
 export abstract class UserRepositoryAbstract {
   public abstract findAll(): Promise<User[] | []>;
   public abstract findByEmail(email: string): Promise<User[]>;

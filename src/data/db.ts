@@ -12,9 +12,11 @@ abstract class DBService {
 
 export class DBServiceImpl extends DBService {
   public async connect(): Promise<void> {
-    const sql = postgres("psql://postgres:postgres@localhost:6000", { max: 1 });
+    const sql = postgres(
+      `psql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}`,
+      { max: 1 }
+    );
     this._db = drizzle(sql);
     await migrate(this._db, { migrationsFolder: "drizzle" });
-    console.log("DBService connect");
   }
 }

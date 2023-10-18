@@ -1,4 +1,4 @@
-import request from "../../utils/requests";
+import request from "../../logic/utils/requests";
 import LipaNaMpesa from "./STKPush";
 import getAuth from "./auth";
 import { ClassConstructor } from "./models";
@@ -10,8 +10,7 @@ class Mpesa {
 
   constructor(config: ClassConstructor) {
     if (config.consumerKey === "") throw new Error("Consumer Key is Missing");
-    if (config.consumerSecret === "")
-      throw new Error("Consumer Secret is Missing");
+    if (config.consumerSecret === "") throw new Error("Consumer Secret is Missing");
 
     this.configs = { ...config };
     this.request = request.bind(this);
@@ -23,13 +22,10 @@ class Mpesa {
   }
 
   authorization() {
-    return getAuth.bind(this)(
-      this.configs.consumerKey,
-      this.configs.consumerSecret
-    );
+    return getAuth.bind(this)(this.configs.consumerKey, this.configs.consumerSecret);
   }
   lipaNaMpesaOnline() {
-    //@ts-ignore ae
+    //@ts-ignore
     return LipaNaMpesa.bind(this)(...arguments);
   }
 }
