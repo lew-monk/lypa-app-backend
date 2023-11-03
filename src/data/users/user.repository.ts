@@ -12,22 +12,20 @@ export const insertUserSchema = createInsertSchema(users, {
   msisdn: (schema) => schema.msisdn.regex(phoneRegex, "Invalid phone number. Use format 254xxxxxxxxx"),
 });
 @injectable()
-export class UserRepository extends UserRepositoryAbstract {
-  public constructor(private readonly _dbService: DBServiceImpl) {
-    super();
-  }
+export class UserRepository implements UserRepositoryAbstract {
+  public constructor(private readonly _dbService: DBServiceImpl) {}
 
   public async findAll(): Promise<User[]> {
     const profiles = await this._dbService._db.select().from(users);
     return profiles;
   }
-  public async findByEmail(email: string): Promise<User[]> {
+  public async findByEmail(email: string): Promise<User> {
     const profile = await this._dbService._db.select().from(users).where(eq(users.email, email));
-    return profile;
+    return profile[0];
   }
-  public async findById(id: number): Promise<User[]> {
+  public async findById(id: number): Promise<User> {
     const profile = await this._dbService._db.select().from(users).where(eq(users.id, id));
-    return profile;
+    return profile[0];
   }
   public async deleteById(id: number): Promise<unknown> {
     const profile = await this._dbService._db.delete(users).where(eq(users.id, id));
@@ -42,7 +40,7 @@ export class UserRepository extends UserRepositoryAbstract {
     return profile;
   }
 
-  public async create(user: NewUser): Promise<any> {
+  public async createUser(user: NewUser): Promise<any> {
     const profile = await this._dbService._db.insert(users).values(user).returning({ insertedId: users.id });
     return profile;
   }

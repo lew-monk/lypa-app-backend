@@ -14,19 +14,11 @@ export class DapiService {
   ) {}
 
   public async getIdentity() {
-    const { status, code, success, operationID, identity, msg } = await dapi.data.getIdentity(
-      this._accessToken,
-      this._userSecret
-    );
+    const { status, identity, msg } = await dapi.data.getIdentity(this._accessToken, this._userSecret);
     if (status === "done") {
       return identity;
-    }
-    if (status === "failed") {
+    } else if (status === "failed") {
       throw new ValidationException(msg!);
-    }
-
-    if (status === "user_input_required") {
-      throw new ValidationException("Pending");
-    }
+    } else throw new ValidationException("Pending");
   }
 }

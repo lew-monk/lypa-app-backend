@@ -33,13 +33,13 @@ export class UserService {
   }
   public async createUser(user: UserSignUpDTO) {
     let check = await this.userRepo.findByEmail(user.email);
-    if (check.length > 0) throw new ValidationException("User already exists");
+    if (!check) throw new ValidationException("User already exists");
 
     const password = await new PasswordHandler().hashPassword(user.password);
 
     user.setHashedPassword = password;
 
-    const newUser = await this.userRepo.create(user);
+    const newUser = await this.userRepo.createUser(user);
 
     await this.walletRepo.createWallet({
       userId: newUser[0].insertedId,
@@ -50,14 +50,14 @@ export class UserService {
 
   public async login(email: string, password: string): Promise<User> {
     const user = await this.userRepo.findByEmail(email);
-    if (user.length < 1) throw new UnauthorizedException("User does not exist");
+    if (!user) throw new UnauthorizedException("User does not exist");
 
     const passwordHandler = new PasswordHandler();
 
-    const checkPassword = await passwordHandler.comparePassword(password, user[0].password);
+    const checkPassword = await passwordHandler.comparePassword(password, user.password);
 
     if (!checkPassword) throw new UnauthorizedException("Email or password is incorrect");
 
-    return user[0];
+    return user;
   }
 }
