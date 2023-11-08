@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import { controller, httpDelete, httpGet, httpPatch, httpPost } from "inversify-express-utils";
+import { GetProfileDTO } from "../../logic/dto/user/getProfile.dto";
 import { LoginDTO } from "../../logic/dto/user/login.dto";
 import { UserSignUpDTO } from "../../logic/dto/user/signup";
 import { UserService } from "../../logic/users/users";
+import { JwtHandler } from "../../logic/utils/token_handler";
 import { BaseHttpResponse } from "../lib/base-hhtp-response";
 import { SessionManagement } from "../middleware/check-session-validity";
 import { ValidateRequest } from "../middleware/validate-request";
@@ -66,6 +68,19 @@ export class UserController {
       const accessToken = new SessionManagement().generateToken({ id, email, msisdn }, 3600);
 
       res.status(200).json(BaseHttpResponse.success({ user: { email }, accessToken }, 200));
+    } catch (error: any) {
+      res.status(400).json(BaseHttpResponse.failed(error.message, 403));
+    }
+  }
+
+  @httpGet("/profile", new JwtHandler().verifyToken, ValidateRequest.with(GetProfileDTO))
+  //@ts-ignore
+  private async getProfile(req: Request, res: Response) {
+    const { email, msisdn, id } = req.body;
+    console.log(req.body.email);
+    try {
+      const { wallet, transactions } = await this._userService.getUserProfile(email, msisdn, id);
+      res.status(200).json(BaseHttpResponse.success({ wallet, transactions }, 200));
     } catch (error: any) {
       res.status(400).json(BaseHttpResponse.failed(error.message, 403));
     }

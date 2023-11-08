@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { injectable } from "inversify";
 import { DBServiceImpl } from "../db";
-import { NewUser, User, users } from "../schema";
+import { MpesaTransaction, NewUser, User, mpesaTransaction, users } from "../schema";
 import { UserRepositoryAbstract } from "./abstract";
 
 const phoneRegex = new RegExp(/^(254|0)[0-9]{9}$/);
@@ -38,6 +38,15 @@ export class UserRepository implements UserRepositoryAbstract {
       .where(eq(users.id, id))
       .returning({ updatedId: users.id });
     return profile;
+  }
+
+  public async getUserTransactions(msisdn: string): Promise<MpesaTransaction[]> {
+    const transactions = await this._dbService._db
+      .select()
+      .from(mpesaTransaction)
+      .where(eq(mpesaTransaction.msisdn, msisdn))
+      .limit(5);
+    return transactions;
   }
 
   public async createUser(user: NewUser): Promise<any> {

@@ -48,6 +48,13 @@ export class UserService {
     return newUser;
   }
 
+  public async getUserProfile(email: string, msisdn: string, userId: number) {
+    console.log(email, msisdn, userId);
+    const wallet = await this.walletRepo.getWalletByUserId(userId);
+    const transactions = await this.userRepo.getUserTransactions(msisdn);
+    return { wallet: wallet[0], transactions };
+  }
+
   public async login(email: string, password: string): Promise<User> {
     const user = await this.userRepo.findByEmail(email);
     if (!user) throw new UnauthorizedException("User does not exist");
