@@ -35,7 +35,7 @@ export class MpesaService extends MpesaServiceAbstract {
 
       //prettier-ignore
       //@ts-ignore
-      await newTrans.lipaNaMpesaOnline(msisdn, 1, `${process.env.LIPA_NA_MPESA_CALLBACK_URL}/${trans[0].id}/${userId}`, "CompanyXLTD", "CustomerPayBillOnline");
+      await newTrans.lipaNaMpesaOnline(msisdn, amount, `${process.env.LIPA_NA_MPESA_CALLBACK_URL}/${trans[0].id}/${userId}`, "CompanyXLTD", "CustomerPayBillOnline");
     } catch (error: any) {
       throw new Error(error.message);
     }

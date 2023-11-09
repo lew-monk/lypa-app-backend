@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "f02d9900-e942-4b08-8e96-43e9b6c25e2f",
+  "id": "b91aea71-672b-411b-a886-3067f8fa3398",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "mpesa_transactions": {
@@ -62,14 +62,14 @@
           "primaryKey": true,
           "notNull": true
         },
-        "msisdn": {
-          "name": "msisdn",
+        "email": {
+          "name": "email",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
-        "amount": {
-          "name": "amount",
+        "msisdn": {
+          "name": "msisdn",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false

@@ -77,7 +77,7 @@ export class UserController {
   //@ts-ignore
   private async getProfile(req: Request, res: Response) {
     const { email, msisdn, id } = req.body;
-    console.log(req.body.email);
+
     try {
       const { wallet, transactions } = await this._userService.getUserProfile(email, msisdn, id);
       res.status(200).json(BaseHttpResponse.success({ wallet, transactions }, 200));

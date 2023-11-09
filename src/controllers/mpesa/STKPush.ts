@@ -36,9 +36,7 @@ async function LipaNaMpesa(
     .replace(/[^0-9]/g, "")
     .slice(0, -3);
 
-  const password = Buffer.from(`${_shortCode}${_passKey}${timeStamp}`).toString(
-    "base64"
-  );
+  const password = Buffer.from(`${_shortCode}${_passKey}${timeStamp}`).toString("base64");
 
   //@ts-ignore
   const req = await this.request();

@@ -1,5 +1,4 @@
 import { drizzle, PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { injectable } from "inversify";
 import postgres from "postgres";
 
@@ -13,10 +12,10 @@ abstract class DBService {
 export class DBServiceImpl extends DBService {
   public async connect(): Promise<void> {
     const sql = postgres(
-      `psql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}`,
+      `psql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?sslmode=require`,
       { max: 1 }
     );
     this._db = drizzle(sql);
-    await migrate(this._db, { migrationsFolder: "drizzle" });
+    // await migrate(this._db, { migrationsFolder: "drizzle" });
   }
 }

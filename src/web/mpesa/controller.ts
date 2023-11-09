@@ -14,6 +14,7 @@ export class MpesaController {
     const mpesaTransactions = await this.mpesaService.getMpesaTransactions();
     res.status(200).json(BaseHttpResponse.success({ transactions: mpesaTransactions }, 200));
   }
+
   @httpPost("/confirmation/:transactionId/:userId")
   //@ts-ignore
   private async callBack(req: Request, res: Response) {

@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS "mpesa_transactions" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user_profile" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"msisdn" varchar NOT NULL,
-	"amount" varchar,
+	"email" varchar NOT NULL,
+	"msisdn" varchar,
 	"password" varchar NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now()

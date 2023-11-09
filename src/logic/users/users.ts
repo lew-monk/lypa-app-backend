@@ -33,7 +33,8 @@ export class UserService {
   }
   public async createUser(user: UserSignUpDTO) {
     let check = await this.userRepo.findByEmail(user.email);
-    if (!check) throw new ValidationException("User already exists");
+
+    if (check !== undefined) throw new ValidationException("User already exists");
 
     const password = await new PasswordHandler().hashPassword(user.password);
 
@@ -49,7 +50,6 @@ export class UserService {
   }
 
   public async getUserProfile(email: string, msisdn: string, userId: number) {
-    console.log(email, msisdn, userId);
     const wallet = await this.walletRepo.getWalletByUserId(userId);
     const transactions = await this.userRepo.getUserTransactions(msisdn);
     return { wallet: wallet[0], transactions };

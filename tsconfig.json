@@ -15,7 +15,8 @@
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": false,
     "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "compileOnSave": true,
   "include": ["src"]

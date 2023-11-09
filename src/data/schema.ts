@@ -14,8 +14,8 @@ export const mpesaTransaction = pgTable("mpesa_transactions", {
 
 export const users = pgTable("user_profile", {
   id: serial("id").primaryKey(),
-  email: varchar("msisdn").notNull(),
-  msisdn: varchar("amount"),
+  email: varchar("email").notNull(),
+  msisdn: varchar("msisdn"),
   password: varchar("password").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
