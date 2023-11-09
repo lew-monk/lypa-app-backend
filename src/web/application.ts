@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
+import expressWinston from "express-winston";
 import { InversifyExpressServer } from "inversify-express-utils";
+import winston from "winston";
 import { UnauthorizedException } from "../controllers/exceptions/unauthorized";
 import { ValidationException } from "../controllers/exceptions/validation-exception";
 import { DBServiceImpl } from "../data/db";
@@ -37,7 +39,20 @@ export class App {
     });
 
     server.setConfig((app) => {
+      app.use(
+        expressWinston.logger({
+          transports: [new winston.transports.Console()],
+          format: winston.format.combine(winston.format.logstash(), winston.format.json()),
+          colorize: true,
+        })
+      );
       app.use(express.json());
+      app.use(
+        expressWinston.errorLogger({
+          transports: [new winston.transports.Console()],
+          format: winston.format.combine(winston.format.colorize(), winston.format.json()),
+        })
+      );
     });
 
     const app = server.build();
