@@ -9,13 +9,14 @@
     "target": "es2017",
     "esModuleInterop": true,
     "lib": ["ES6"],
-    "types": ["reflect-metadata"],
+    "types": ["reflect-metadata", "node"],
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": false,
     "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "compileOnSave": true,
   "include": ["src"]

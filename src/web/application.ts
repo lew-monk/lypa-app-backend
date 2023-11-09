@@ -18,24 +18,22 @@ export class App {
     });
 
     server.setErrorConfig((expressApp: any) => {
-      expressApp.use(
-        (err: any, req: Request, res: Response, next: NextFunction) => {
-          if (err instanceof ValidationException) {
-            const response = BaseHttpResponse.failed(err.message, 400);
-            return res.status(response.statusCode).json(response);
-          }
-          if (err instanceof Error) {
-            const response = BaseHttpResponse.failed(err.message, 500);
-            return res.status(response.statusCode).json(response);
-          }
-          if (err instanceof UnauthorizedException) {
-            const response = BaseHttpResponse.failed(err.message, 401);
-            return res.status(response.statusCode).json(response);
-          }
-
-          return next();
+      expressApp.use((err: any, req: Request, res: Response, next: NextFunction) => {
+        if (err instanceof ValidationException) {
+          const response = BaseHttpResponse.failed(err.message, 400);
+          return res.status(response.statusCode).json(response);
         }
-      );
+        if (err instanceof UnauthorizedException) {
+          const response = BaseHttpResponse.failed(err.message, 401);
+          return res.status(response.statusCode).json(response);
+        }
+        if (err instanceof Error) {
+          const response = BaseHttpResponse.failed(err.message, 500);
+          return res.status(response.statusCode).json(response);
+        }
+
+        return next();
+      });
     });
 
     server.setConfig((app) => {
