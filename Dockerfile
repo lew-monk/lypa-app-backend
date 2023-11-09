@@ -17,5 +17,5 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install --omit=dev
 COPY --from=build /usr/src/app/build ./build
-EXPOSE 80
+EXPOSE 3000
 CMD npm start
