@@ -1,10 +1,24 @@
 import DapiApp from "@dapi-co/dapi-node";
+import { IAccount } from "@dapi-co/dapi-node/lib/types/models/Account";
+import { IUserInput, IUserInputs } from "@dapi-co/dapi-node/lib/types/models/IUserInputs";
+import { IGetAccountsResponse } from "@dapi-co/dapi-node/lib/types/response/getAccounts";
 import { injectable } from "inversify";
 import { ValidationException } from "../../controllers/exceptions/validation-exception";
 
 const dapi = new DapiApp({
   appSecret: process.env.DAPI_APP_SECRET!,
 });
+
+export interface IMyAccounts {
+  accounts?: IAccount[];
+  operationID: string | undefined;
+  status: string;
+  success: boolean;
+  code?: number;
+  msg: string;
+  type?: string;
+  usersInputs?: IUserInput[];
+}
 
 @injectable()
 export class DapiService {
@@ -28,5 +42,14 @@ export class DapiService {
     else if (status === "failed") {
       throw new ValidationException(msg!);
     } else throw new ValidationException("Pending");
+  }
+  public async getAccounts(
+    accessCode: string,
+    userSecret: string,
+    operationID: string,
+    userInputs: IUserInputs[]
+  ): Promise<IGetAccountsResponse> {
+    const acc = await dapi.data.getAccounts(accessCode, userSecret, operationID, userInputs);
+    return acc;
   }
 }

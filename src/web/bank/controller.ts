@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { controller, httpGet, httpPost } from "inversify-express-utils";
 import path from "path";
 import { DapiService } from "../../logic/dapi/dapi";
+import { GetBankAccountDTO } from "../../logic/dto/bank/GetBankAccountsDTO";
 import { ExchangeTokenDTO } from "../../logic/dto/bank/exhangeTokenDTO";
 import { JwtHandler } from "../../logic/utils/token_handler";
 import { BaseHttpResponse } from "../lib/base-hhtp-response";
@@ -25,5 +26,17 @@ export class BankController {
   @httpGet("/login-two")
   public async logon(req: Request, res: Response) {
     res.sendFile("main.html", { root: path.join(__dirname, "/src/views/") });
+  }
+
+  @httpPost("/get-bank-accounts", new JwtHandler().verifyToken, ValidateRequest.with(GetBankAccountDTO))
+  public async getBankAccounts(req: Request, res: Response) {
+    console.log(req.body);
+    const accounts = await this.bankService.getAccounts(
+      req.body.accessCode,
+      req.body.userSecret,
+      req.body.operationID,
+      req.body.userInputs
+    );
+    res.status(200).json(BaseHttpResponse.success({ accounts }));
   }
 }
