@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { injectable } from "inversify";
 import { DBServiceImpl } from "../db";
-import { MpesaTransaction, NewUser, User, mpesaTransaction, users } from "../schema";
+import { MpesaTransaction, NewUser, User, mpesaTransaction, users, wallet } from "../schema";
 import { UserRepositoryAbstract } from "./abstract";
 
 const phoneRegex = new RegExp(/^(254|0)[0-9]{9}$/);
@@ -11,6 +11,25 @@ export const insertUserSchema = createInsertSchema(users, {
   email: (schema) => schema.email.email("Invalid email"),
   msisdn: (schema) => schema.msisdn.regex(phoneRegex, "Invalid phone number. Use format 254xxxxxxxxx"),
 });
+
+type TWallet = {
+  user_profile: {
+    id: number;
+    createdAt: Date | null;
+    updatedAt: Date | null;
+    email: string;
+    msisdn: string | null;
+    password: string;
+  };
+  wallet: {
+    id: number;
+    createdAt: Date | null;
+    updatedAt: Date | null;
+    userId: number;
+    balance: number;
+  } | null;
+};
+
 @injectable()
 export class UserRepository implements UserRepositoryAbstract {
   public constructor(private readonly _dbService: DBServiceImpl) {}
@@ -52,5 +71,30 @@ export class UserRepository implements UserRepositoryAbstract {
   public async createUser(user: NewUser): Promise<any> {
     const profile = await this._dbService._db.insert(users).values(user).returning({ insertedId: users.id });
     return profile;
+  }
+
+  public async getUserWalletByID(id: number): Promise<TWallet> {
+    const wallets = await this._dbService._db
+      .select()
+      .from(users)
+      .leftJoin(wallet, eq(users.id, wallet.userId))
+      .where(eq(users.id, id));
+    return wallets[0];
+  }
+  public async getUserWalletByEmail(email: string): Promise<any> {
+    const wallets = await this._dbService._db
+      .select()
+      .from(users)
+      .leftJoin(wallet, eq(users.id, wallet.userId))
+      .where(eq(users.email, email));
+    return wallets;
+  }
+  public async getUserWalletByMsisdn(msisdn: string): Promise<any> {
+    const wallets = await this._dbService._db
+      .select()
+      .from(users)
+      .leftJoin(wallet, eq(users.id, wallet.userId))
+      .where(eq(users.msisdn, msisdn));
+    return wallets;
   }
 }

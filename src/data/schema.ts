@@ -29,6 +29,16 @@ export const wallet = pgTable("wallet", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const walletTransaction = pgTable("wallet_transaction", {
+  id: serial("id").primaryKey(),
+  walletId_from: integer("walletId_from").notNull(),
+  walletId_to: integer("walletId_to").notNull(),
+  status: mpesaStatusEnum("status").default("pending"),
+  amount: integer("amount").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const userRelations = relations(users, ({ many }) => ({
   wallet: many(wallet),
   mpesaTransactions: many(mpesaTransaction),
@@ -51,5 +61,9 @@ export type CreateWallet = typeof wallet.$inferInsert;
 export type NewUser = typeof users.$inferInsert;
 
 export type NewTransaction = typeof mpesaTransaction.$inferInsert;
+
+export type NewWalletTransaction = typeof walletTransaction.$inferInsert;
+
+export type WalletTransaction = InferSelectModel<typeof walletTransaction>;
 
 export type User = InferSelectModel<typeof users>;

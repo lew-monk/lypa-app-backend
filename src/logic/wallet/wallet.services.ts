@@ -1,5 +1,7 @@
+import { injectable } from "inversify";
 import { WalletRepository } from "../../data/wallet/wallet.repository";
 
+@injectable()
 export class WalletService {
   public constructor(private _walletRepo: WalletRepository) {}
 
