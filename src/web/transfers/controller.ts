@@ -17,9 +17,13 @@ export class TransferController {
     res.status(200).json(BaseHttpResponse.success({ transfers }, 200));
   }
 
-  @httpGet("/user/:userId")
+  @httpGet("/user/:userId", new JwtHandler().verifyToken)
   public async getUserTransfers(req: Request, res: Response) {
-    const transfers = await this.transferService.getUserTransfers(parseInt(req.params.userId));
+    const transfers = await this.transferService.getUserTransfers(
+      parseInt(req.params.userId),
+      parseInt(req.params.size),
+      parseInt(req.params.page)
+    );
     res.status(200).json(BaseHttpResponse.success({ transfers }, 200));
   }
 
@@ -32,6 +36,6 @@ export class TransferController {
   @httpPost("/update-status", ValidateRequest.with(updateTransferDTO))
   public async updateTransferStatus(req: Request, res: Response) {
     const transfer = await this.transferService.updateTransferStatusWithId(req.body.id, req.body.status);
-    res.status(200).json(BaseHttpResponse.success({ transfer }, 200));
+    res.status(200).json(BaseHttpResponse.success({ ...transfer }, 200));
   }
 }

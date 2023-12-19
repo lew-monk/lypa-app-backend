@@ -39,8 +39,8 @@ export class TransferService {
     return transfers.id;
   }
 
-  public async getUserTransfers(userId: number): Promise<WalletTransaction[]> {
-    const transfers = await this.transferRepo.getUserTransfers(userId);
+  public async getUserTransfers(userId: number, size: number, page: number): Promise<WalletTransaction[]> {
+    const transfers = await this.transferRepo.getUserTransfers(userId, size, page);
     return transfers;
   }
 
