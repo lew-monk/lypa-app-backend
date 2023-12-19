@@ -52,6 +52,7 @@ export class DapiService {
     const acc = await dapi.data.getAccounts(accessCode, userSecret, operationID, userInputs);
     return acc;
   }
+
   public async transferFlow(
     accessCode: string,
     userSecret: string,
@@ -77,9 +78,12 @@ export class DapiService {
 
     const acc = await dapi.payment.transferAutoFlow(transferFlow, accessCode, userSecret, operationID, userInputs);
 
-    if (acc.status === "success") {
-      await this.walletService.getWalletByUserId(parseInt(userID));
-      await this.walletService.updateWalletById(parseInt(userID), { balance: amount });
+    if (acc.success) {
+      //Update sender wallet balance
+      const recipient_wallet = await this.walletService.getWalletByUserId(parseInt(userID));
+      const recipient_wallet_balance = recipient_wallet[0].balance + parseInt(amount);
+      console.log(recipient_wallet_balance);
+      await this.walletService.updateWalletById(recipient_wallet[0].id, { balance: recipient_wallet_balance });
     }
 
     return acc;
