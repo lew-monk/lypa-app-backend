@@ -31,6 +31,12 @@ export class UserService {
     const user = await this.userRepo.updateWithId(id, updateData);
     return user;
   }
+
+  public async getUserWalletByID(id: number) {
+    const user = await this.userRepo.getUserWalletByID(id);
+    return user;
+  }
+
   public async createUser(user: UserSignUpDTO) {
     let check = await this.userRepo.findByEmail(user.email);
 

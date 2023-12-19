@@ -8,6 +8,20 @@
       "when": 1699525228082,
       "tag": "0000_lumpy_ezekiel_stane",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1702963468410,
+      "tag": "0001_loose_luke_cage",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1702965666163,
+      "tag": "0002_watery_black_tom",
+      "breakpoints": true
     }
   ]
 }
