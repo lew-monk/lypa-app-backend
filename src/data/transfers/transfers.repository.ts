@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { injectable } from "inversify";
 import { DBServiceImpl } from "../db";
-import { NewWalletTransaction, WalletTransaction, mpesaStatusEnum, walletTransaction } from "../schema";
+import { NewWalletTransaction, WalletTransaction, mpesaStatusEnum, users, walletTransaction } from "../schema";
 
 @injectable()
 export class TransferRepository {
@@ -45,11 +45,21 @@ export class TransferRepository {
     return transfer[0];
   }
 
-  public async getUserTransfers(userId: number): Promise<WalletTransaction[]> {
+  public async getUserTransfers(userId: number, size: number, page: number): Promise<any[]> {
     const transfers = await this._dbService._db
-      .select()
+      .select({
+        id: walletTransaction.id,
+        amount: walletTransaction.amount,
+        status: walletTransaction.status,
+        updatedAt: walletTransaction.updatedAt,
+        recipient: users.email,
+      })
       .from(walletTransaction)
-      .where(eq(walletTransaction.walletId_from, userId));
+      .rightJoin(users, eq(walletTransaction.walletId_to, users.id))
+      .limit(size)
+      .where(eq(walletTransaction.walletId_from, userId))
+      .orderBy(desc(walletTransaction.updatedAt))
+      .offset((page - 1) * size);
     return transfers;
   }
 }
